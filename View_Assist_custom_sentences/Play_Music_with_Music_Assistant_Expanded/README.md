@@ -4,6 +4,45 @@ A voice-control blueprint for [View Assist](https://github.com/dinki/View-Assist
 
 You talk to a View Assist satellite; the blueprint figures out which player that satellite controls and acts on it. Spoken replies come back through the satellite's own voice, and the music screen updates automatically.
 
+> **Beta:** This expanded blueprint is currently hosted in a fork while it's being tested, with the goal of contributing it back to the official View Assist project. Feedback from beta testers is welcome.
+
+---
+
+## Installation
+
+### Before you start
+
+You'll need:
+- **View Assist** installed, with at least one satellite set up.
+- The **Music Assistant** integration configured, with at least one player.
+
+### Option 1 — One-click import (easiest)
+
+Click the button below. It opens the blueprint import dialog in your own Home Assistant, with the address already filled in — just confirm.
+
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fchangeling%2FView-Assist%2Fblob%2Fmain%2FView_Assist_custom_sentences%2FPlay_Music_with_Music_Assistant_Expanded%2Fblueprint-playmusicwithmusicassistantexpanded.yaml)
+
+If the badge doesn't render, use this link: [My Home Assistant import link](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fchangeling%2FView-Assist%2Fblob%2Fmain%2FView_Assist_custom_sentences%2FPlay_Music_with_Music_Assistant_Expanded%2Fblueprint-playmusicwithmusicassistantexpanded.yaml)
+
+### Option 2 — Manual import
+
+1. In Home Assistant, go to **Settings → Automations & Scenes → Blueprints**.
+2. Click **Import Blueprint** (bottom right).
+3. Paste this address and import:
+
+   ```
+   https://github.com/changeling/View-Assist/blob/main/View_Assist_custom_sentences/Play_Music_with_Music_Assistant_Expanded/blueprint-playmusicwithmusicassistantexpanded.yaml
+   ```
+
+You can also view or download the blueprint file directly here: [blueprint-playmusicwithmusicassistantexpanded.yaml](https://github.com/changeling/View-Assist/blob/main/View_Assist_custom_sentences/Play_Music_with_Music_Assistant_Expanded/blueprint-playmusicwithmusicassistantexpanded.yaml).
+
+### After importing
+
+1. Go to **Settings → Automations & Scenes → Automations → Create Automation → Use Blueprint**, and pick **View Assist - Play Music with Music Assistant Expanded**.
+2. Fill in the options (see [Configuration](#configuration-for-everyone) below). At minimum, choose your Music Assistant instance.
+3. Save the automation.
+4. Test a few phrases in **Developer Tools → Assist** before using them by voice.
+
 ---
 
 ## What you can do

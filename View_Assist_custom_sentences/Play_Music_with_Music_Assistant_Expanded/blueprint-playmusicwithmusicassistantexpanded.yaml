@@ -1733,14 +1733,14 @@ actions:
                 response_variable: ma_queue
               - variables:
                   ma_upcoming: >-
-                    {% set items = ma_queue[ma_nowplaying_player]['items'] | default([]) %}
-                    {% set current = state_attr(ma_nowplaying_player, 'media_title') | default('') %}
-                    {% set ns = namespace(idx=-1) %}
-                    {% for i in range(items | length) %}
-                      {% if ns.idx == -1 and (items[i].name | default('')) == current %}{% set ns.idx = i %}{% endif %}
-                    {% endfor %}
-                    {% set up = (items[ns.idx+1 : ns.idx+4]) if ns.idx >= 0 else (items[:3]) %}
-                    {{ up | map(attribute='name') | reject('equalto', '') | list | join(', ') }}
+                    {% set q = ma_queue[ma_nowplaying_player] | default({}) %}
+                    {% set nxt = q.get('next_item') if q is mapping else none %}
+                    {% set ns = namespace(name='') %}
+                    {% if nxt is mapping %}
+                      {% set ns.name = nxt.get('name', '') %}
+                      {% if ns.name == '' and nxt.get('media_item') is mapping %}{% set ns.name = nxt['media_item'].get('name', '') %}{% endif %}
+                    {% endif %}
+                    {{ ns.name }}
               - alias: Report the upcoming tracks if there are any
                 if:
                   - condition: template

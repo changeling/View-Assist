@@ -70,7 +70,7 @@ Everything below is a thing you can say out loud. The exact wording is flexible 
 - **Add a song to the end** — "add Yesterday by the Beatles to the queue"
 - **Replace what's coming up** — "play Yesterday by the Beatles next and clear the rest"
 - **Hear what's playing** — "what's playing" (tells you the song, artist, and album)
-- **Hear what's coming up** — "what's next," "what's in the queue"
+- **Hear what's up next** — "what's next," "what's in the queue" (tells you the next track)
 
 ### Move music around the house
 - **Send it to another room** — "move the music to the bedroom"
@@ -106,7 +106,7 @@ The original blueprint could do four things: play an artist, play a playlist, pl
 
 **Queue awareness**
 - "What's playing" — now reports song, artist, and album
-- "What's next" — reads out the upcoming tracks
+- "What's next" — tells you the next track in the queue
 
 **Moving music between rooms**
 - Send the music to a named room
@@ -211,7 +211,7 @@ Every command is built from four pieces that live in four places in the file. To
 - `music_assistant.search` → resolve artist/album/track/radio/playlist by name (original).
 - `music_assistant.play_media` → play with `media_type`, `enqueue` (`play` / `replace` / `next` / `add` / `replace_next`), and `radio_mode`. `media_id` accepts a single name/URI **or a list of URIs** (used by the random-mix command).
 - `music_assistant.get_library` → `order_by: random` with a `limit` builds the random mix; its `items[].uri` list is handed straight to `play_media`.
-- `music_assistant.get_queue` → returns `{<entity_id>: {items: [...]}}`; used to read upcoming tracks.
+- `music_assistant.get_queue` → returns per-player queue metadata including `current_item` and `next_item`. Home Assistant limits this to the current and next item only; `items` is a **count** (int), not a list. Used to read the next track.
 - `music_assistant.transfer_queue` → `target.entity_id` is the **destination**, `data.source_player` the origin, `auto_play: true` resumes playback.
 - `music_assistant.play_announcement` → URL-based sound announcements only (the text path uses the pipeline, not this action).
 - Standard `media_player.*` actions for the Tier 3 controls (`shuffle_set`, `repeat_set`, `clear_playlist`, `media_stop`, `select_source`, `join`, `unjoin`) and `button.press` for favoriting.
@@ -226,7 +226,7 @@ Every command is built from four pieces that live in four places in the file. To
 
 ### Things to verify in your own environment
 
-- **Queue item field name** — "what's next" reads each queue item's `name`. If your Music Assistant version labels items differently, the upcoming list will come back empty (you'll hear "nothing is queued after this") rather than wrong. Confirm by running `music_assistant.get_queue` in Developer Tools → Actions and inspecting the response.
+- **Next-track field** — "what's next" reads `next_item.name`, falling back to `next_item.media_item.name`. If your Music Assistant version names these differently you'll hear "nothing is queued after this" rather than an error. Confirm by running `music_assistant.get_queue` in Developer Tools → Actions and inspecting the response.
 - **`select_source`** — the spoken source must match a source the player actually exposes; this is the most fragile control and not every player exposes sources.
 - **`replace_next`** — the most niche command and the most likely to overlap with others; reword or remove it if it collides.
 - **Grouping** — `media_player.join` only works among compatible player types and will error otherwise.
@@ -235,7 +235,7 @@ Every command is built from four pieces that live in four places in the file. To
 ### Known design boundaries (deliberate, not bugs)
 
 - **Announcements** ride the conversation reply (pipeline voice). A true *ducked spoken overlay on the music player* — as opposed to the satellite voicing the reply — would need either an explicit TTS engine via `tts.speak` to the music player, or resolving the satellite's `assist_satellite` entity for `assist_satellite.announce`. This was left out on purpose to avoid fighting the mechanism that already works.
-- **"What's next"** reads the next three tracks; it does not page through the full queue.
+- **"What's next"** reports only the **next track**. `get_queue` is intentionally limited to the current and next item (a Home Assistant policy), so listing the full upcoming queue isn't possible through it — that would require Music Assistant's REST API (`player_queues/all`) via a `rest_command`, which is out of scope for this blueprint.
 - **Native intents** (next/previous, pause, resume, volume) are intentionally not included — Home Assistant handles those out of the box, and adding them would create conflicts.
 
 ### Translations

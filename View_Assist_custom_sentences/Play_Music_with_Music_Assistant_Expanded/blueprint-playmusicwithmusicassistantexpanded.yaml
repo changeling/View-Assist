@@ -1,9 +1,18 @@
+# =============================================================================
+# View Assist - Play Music with Music Assistant (Expanded)
+# Version: 0.1.0
+# Date:    2026-06-14
+# Based on: dinki's "Play Music with Music Assistant" v1.2.7
+# Changelog: see CHANGELOG.md
+# Status: beta (0.x) - commands and behavior may change before 1.0.0
+# =============================================================================
 blueprint:
   name: View Assist - Play Music with Music Assistant Expanded
   description:
-    Use various methods to play individual songs, add to queue, play artist
-    and playlists from your Music Assistant server (View Assist Play Music with Music
-    Assistant v 1.2.7 + Tier 3 media controls + Tier 2 play_media expansion + transfer queue + favorite + now playing + announcements + random + queue lookahead)
+    Voice control for Music Assistant from a View Assist satellite - play music,
+    control playback, manage the queue, move audio between rooms, make
+    announcements, and more. Expanded edition v0.1.0, based on Play Music with
+    Music Assistant v1.2.7. See CHANGELOG.md for the full list of changes.
   domain: automation
   input:
     ma_instance:
@@ -76,13 +85,6 @@ blueprint:
         The command to add a song to the end of the queue. Distinct from the
         Queue Song command, which inserts the song to play next.
       default: (add | append) {song} by {artist} [to [the] [end of [the]] queue]
-    replace_next_command:
-      name: Replace Next Command
-      description:
-        The command to play a song next while replacing the rest of the queue
-        after the current track. The most niche control; reword or remove if it
-        collides with other commands in your setup.
-      default: play {song} by {artist} next and (clear | replace) [the] (rest | queue)
     # <<<<< NEW CODE END (Tier 2 play_media inputs) <<<<<
     # >>>>> NEW CODE BEGIN (Tier 2 transfer_queue inputs) >>>>>
     transfer_target_command:
@@ -251,9 +253,6 @@ trigger:
   - trigger: conversation
     command: !input add_song_command
     id: addsong
-  - trigger: conversation
-    command: !input replace_next_command
-    id: replacenext
   # <<<<< NEW CODE END (Tier 2 play_media triggers) <<<<<
   # >>>>> NEW CODE BEGIN (Tier 2 transfer_queue triggers) >>>>>
   - trigger: conversation
@@ -359,7 +358,6 @@ actions:
             playradio_not_found: "No he pogut trobar cap emissora anomenada {search_radio}"
             radiomode_found: "Iniciant una ràdio basada en {artist}"
             addsong_queue: "Afegint {song} de {artist} al final de la cua"
-            replacenext_queue: "Reproduint {song} de {artist} a continuació"
             # <<<<< NEW CODE END (Tier 2 ca) <<<<<
             # >>>>> NEW CODE BEGIN (Tier 2 transfer ca) >>>>>
             transfer_found: "Movent la música a {target}"
@@ -414,7 +412,6 @@ actions:
             playradio_not_found: Sorry, I couldn't find a radio station called {search_radio}
             radiomode_found: Starting a radio based on {artist}
             addsong_queue: Adding {song} by {artist} to the end of the queue
-            replacenext_queue: Playing {song} by {artist} next
             # <<<<< NEW CODE END (Tier 2 en) <<<<<
             # >>>>> NEW CODE BEGIN (Tier 2 transfer en) >>>>>
             transfer_found: "Moving the music to {target}"
@@ -469,7 +466,6 @@ actions:
             playradio_not_found: Entschuldigung, ich konnte keinen Radiosender namens {search_radio} finden
             radiomode_found: Starte ein Radio basierend auf {artist}
             addsong_queue: Füge {song} von {artist} ans Ende der Warteschlange hinzu
-            replacenext_queue: Spiele {song} von {artist} als Nächstes
             # <<<<< NEW CODE END (Tier 2 de) <<<<<
             # >>>>> NEW CODE BEGIN (Tier 2 transfer de) >>>>>
             transfer_found: "Verschiebe die Musik zu {target}"
@@ -524,7 +520,6 @@ actions:
             playradio_not_found: "Lo siento, no he podido encontrar una emisora llamada {search_radio}"
             radiomode_found: "Iniciando una radio basada en {artist}"
             addsong_queue: "Añadiendo {song} de {artist} al final de la cola"
-            replacenext_queue: "Reproduciendo {song} de {artist} a continuación"
             # <<<<< NEW CODE END (Tier 2 es) <<<<<
             # >>>>> NEW CODE BEGIN (Tier 2 transfer es) >>>>>
             transfer_found: "Moviendo la música a {target}"
@@ -579,7 +574,6 @@ actions:
             playradio_not_found: Sorry, ik kon geen radiozender genaamd {search_radio} vinden
             radiomode_found: Een radio starten op basis van {artist}
             addsong_queue: "{song} van {artist} achteraan de wachtrij toevoegen"
-            replacenext_queue: "{song} van {artist} hierna afspelen"
             # <<<<< NEW CODE END (Tier 2 nl) <<<<<
             # >>>>> NEW CODE BEGIN (Tier 2 transfer nl) >>>>>
             transfer_found: "De muziek naar {target} verplaatsen"
@@ -634,7 +628,6 @@ actions:
             playradio_not_found: Przepraszam, nie znaleziono stacji radiowej o nazwie {search_radio}
             radiomode_found: Uruchamiam radio na podstawie {artist}
             addsong_queue: Dodaję {song} od {artist} na koniec kolejki
-            replacenext_queue: Odtwarzam {song} od {artist} jako następny
             # <<<<< NEW CODE END (Tier 2 pl) <<<<<
             # >>>>> NEW CODE BEGIN (Tier 2 transfer pl) >>>>>
             transfer_found: "Przenoszę muzykę do {target}"
@@ -689,7 +682,6 @@ actions:
             playradio_not_found: Desculpe, não consegui encontrar uma estação de rádio chamada {search_radio}
             radiomode_found: Iniciando uma rádio baseada em {artist}
             addsong_queue: Adicionando {song} por {artist} ao fim da fila
-            replacenext_queue: Tocando {song} por {artist} a seguir
             # <<<<< NEW CODE END (Tier 2 pt) <<<<<
             # >>>>> NEW CODE BEGIN (Tier 2 transfer pt) >>>>>
             transfer_found: "Movendo a música para {target}"
@@ -744,7 +736,6 @@ actions:
             playradio_not_found: Îmi pare rău, nu am găsit un post de radio numit {search_radio}
             radiomode_found: Pornesc un radio bazat pe {artist}
             addsong_queue: Adaug {song} de {artist} la sfârșitul cozii
-            replacenext_queue: Redau {song} de {artist} în continuare
             # <<<<< NEW CODE END (Tier 2 ro) <<<<<
             # >>>>> NEW CODE BEGIN (Tier 2 transfer ro) >>>>>
             transfer_found: "Mut muzica la {target}"
@@ -1264,65 +1255,6 @@ actions:
                   - variables:
                       conversation_response: >-
                         {{ translations[language]['responses']['addsong_queue'].replace("{artist}", found_track.tracks[0].artists[0].name).replace("{song}", found_track.tracks[0].name) }}
-                  - set_conversation_response: "{{ conversation_response }}"
-                  - action: view_assist.set_state
-                    target:
-                      entity_id: "{{ target_satellite_device }}"
-                    data:
-                      last_said: "{{ conversation_response }}"
-                else:
-                  - set_conversation_response: ""
-            else:
-              - if:
-                  - condition: template
-                    value_template: "{{ target_use_announce is not false }}"
-                then:
-                  - variables:
-                      conversation_response: >-
-                        {{ translations[language]['responses']['playsong_not_found'].replace("{artist}", trigger.slots.artist).replace("{song}", trigger.slots.song) }}
-                  - set_conversation_response: "{{ conversation_response }}"
-                  - action: view_assist.set_state
-                    target:
-                      entity_id: "{{ target_satellite_device }}"
-                    data:
-                      last_said: "{{ conversation_response }}"
-                else:
-                  - set_conversation_response: ""
-      - conditions:
-          - condition: trigger
-            id:
-              - replacenext
-        sequence:
-          - action: music_assistant.search
-            data:
-              limit: 1
-              config_entry_id: "{{ ma_instance }}"
-              media_type:
-                - track
-              name: "{{ trigger.slots.song }}"
-              artist: "{{ trigger.slots.artist | default('') }}"
-            response_variable: found_track
-          - alias: Did we find a track to play next?
-            if:
-              - condition: template
-                value_template: "{{found_track['tracks'] | count>0}}"
-                alias: We found a track!
-            then:
-              - action: music_assistant.play_media
-                target:
-                  entity_id: "{{ target_musicplayer_device }}"
-                data:
-                  media_type: track
-                  enqueue: replace_next
-                  media_id: "{{ found_track.tracks.0.name }}"
-                  artist: "{{ trigger.slots.artist }}"
-              - if:
-                  - condition: template
-                    value_template: "{{ target_use_announce is not false }}"
-                then:
-                  - variables:
-                      conversation_response: >-
-                        {{ translations[language]['responses']['replacenext_queue'].replace("{artist}", found_track.tracks[0].artists[0].name).replace("{song}", found_track.tracks[0].name) }}
                   - set_conversation_response: "{{ conversation_response }}"
                   - action: view_assist.set_state
                     target:

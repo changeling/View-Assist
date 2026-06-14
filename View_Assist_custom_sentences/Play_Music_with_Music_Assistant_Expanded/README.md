@@ -68,7 +68,6 @@ Everything below is a thing you can say out loud. The exact wording is flexible 
 ### Manage the queue
 - **Play a song next** — "queue Yesterday by the Beatles"
 - **Add a song to the end** — "add Yesterday by the Beatles to the queue"
-- **Replace what's coming up** — "play Yesterday by the Beatles next and clear the rest"
 - **Hear what's playing** — "what's playing" (tells you the song, artist, and album)
 - **Hear what's up next** — "what's next," "what's in the queue" (tells you the next track)
 
@@ -95,7 +94,7 @@ The original blueprint could do four things: play an artist, play a playlist, pl
 - Radio stations
 - Radio mode (artist-seeded endless mix)
 - A random mix from your library
-- Extra queue options: add to the end of the queue, and replace what's coming up next (the original only had "play now" and "play next")
+- An extra queue option: add a song to the end of the queue (the original only had "play now" and "play next")
 
 **Playback controls** (previously you had none of these by voice through this blueprint)
 - Shuffle on/off
@@ -228,7 +227,6 @@ Every command is built from four pieces that live in four places in the file. To
 
 - **Next-track field** — "what's next" reads `next_item.name`, falling back to `next_item.media_item.name`. If your Music Assistant version names these differently you'll hear "nothing is queued after this" rather than an error. Confirm by running `music_assistant.get_queue` in Developer Tools → Actions and inspecting the response.
 - **`select_source`** — the spoken source must match a source the player actually exposes; this is the most fragile control and not every player exposes sources.
-- **`replace_next`** — the most niche command and the most likely to overlap with others; reword or remove it if it collides.
 - **Grouping** — `media_player.join` only works among compatible player types and will error otherwise.
 - **Sentence collisions** — several new commands share opening words ("play …") with existing ones; the trailing words disambiguate, but test in Developer Tools → Assist.
 
